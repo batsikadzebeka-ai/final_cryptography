@@ -1,0 +1,62 @@
+TLS Communication Inspection – GitHub (https://github.com)
+
+1. Target Website
+I inspected the TLS connection to: https://github.com
+Tools used:
+- openssl s_client
+- Wireshark
+
+2. OpenSSL Inspection
+Using:
+    openssl s_client -connect github.com:443 -servername github.com -showcerts
+
+From the output I extracted:
+- TLS version: TLS 1.3
+- Cipher suite: TLS_AES_256_GCM_SHA384
+- Certificate chain:
+  * Leaf certificate: CN=github.com
+  * Intermediate CA: (GitHub’s intermediate CA shown in the chain)
+  * Root CA: A trusted public root CA in the system trust store
+
+3. Wireshark TLS Handshake Analysis
+
+a) Client Hello
+- The Client Hello message proposes supported TLS versions (including TLS 1.3)
+- Lists multiple cipher suites including AES-GCM based ones
+- Includes extensions such as:
+  * Server Name Indication (SNI) with “github.com”
+  * Supported Groups (for ECDHE)
+  * Signature Algorithms
+
+b) Server Certificate
+- The server responds with a certificate chain proving the identity of github.com
+- The leaf certificate’s CN/SAN includes “github.com”
+- The certificate is signed by an intermediate CA, which is in turn signed by a trusted root CA
+- The browser/OS validates this chain against its trust store
+
+c) Key Exchange
+- TLS uses an ephemeral Diffie–Hellman (ECDHE) key exchange
+- In TLS 1.3 this appears in the Key Share extension
+- This provides forward secrecy: even if the server’s private key is compromised later, past sessions cannot be decrypted
+
+4. How TLS Provides Confidentiality and Integrity
+
+Confidentiality:
+- After the handshake, a shared session key is established between client and server using the ECDHE key exchange.
+- The application data is encrypted using an AEAD cipher (here: AES-256-GCM), so an attacker who observes the traffic cannot read the plaintext.
+
+Integrity:
+- AEAD ciphers like AES-GCM include an authentication tag (MAC) that detects any modification.
+- If a packet is altered in transit, the integrity check fails and the data is rejected.
+
+Authentication:
+- The server proves its identity with its X.509 certificate issued by a trusted CA.
+- The client verifies the certificate chain and hostname (github.com).
+- This prevents man-in-the-middle attacks where an attacker tries to impersonate GitHub.
+
+5. Summary
+Using openssl s_client and Wireshark, I inspected a real TLS handshake to https://github.com.
+I identified the TLS version, cipher suite, certificate chain, and main handshake messages
+(Client Hello, Server Certificate, Key Exchange), and explained how TLS ensures
+confidentiality, integrity, and authentication for HTTPS connections.
+
