@@ -1,0 +1,12 @@
+Signature Verification Explanation
+
+The file "signed_message.asc" was decrypted and verified with GPG.
+
+Verification results recorded in "gpg_verify_output.txt" include a line:
+  "gpg: Good signature from 'Alice <alice@example.com>'"
+
+This proves:
+1. The message has NOT been modified after Alice signed it. (Integrity)
+2. The signature was created using Alice's private key. (Authenticity)
+3. Therefore, Bob can trust that the email was written by Alice and not tampered with.
+

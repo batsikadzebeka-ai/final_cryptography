@@ -1,0 +1,2 @@
+gpg: can't open 'signed_message.asc': No such file or directory
+gpg: decrypt_message failed: No such file or directory
