@@ -1,0 +1,4 @@
+SHA-256 Integrity Check for Task 2
+Original (alice_message.txt):  840205f1f2b47e115e77f99ef9e49024304e4bdbcefa56d78973f06782256caa
+Decrypted (decrypted_message.txt): 840205f1f2b47e115e77f99ef9e49024304e4bdbcefa56d78973f06782256caa
+Result: PASS
